@@ -63,16 +63,16 @@ def get_map(name):
     return mmap, mlist
 
 #given (name and type) -> fname, load clustering and convert to list of communities (each community is its own list)
-def get_clustering(fname, type):
-	mmap, mlist = get_map(fname)
+def get_clustering(name, type):
+	mmap, mlist = get_map(name)
 
     #get fname
-	if type == 1:
-		clustering = np.loadtxt(fname, dtype = int)
-	elif type == 2:
-		clustering = np.loadtxt(fname, dtype = int)
-	elif type == 3:
-		cluster_data = np.loadtxt('output/wiki_community.txt', dtype = int)
+	if type == "mcl":
+		clustering = np.loadtxt('output/' + name + '.metis.c1000.i2.0.b0.5', dtype = int)
+	elif type == "metis":
+		clustering = np.loadtxt('output/' + name + '.metis.part.100', dtype = int)
+	elif type == "community":
+		cluster_data = np.loadtxt('output/' + name + '_community.txt', dtype = int)
 		cluster_map = {i[0]: i[1] for i in cluster_data}
 		clustering = [cluster_map[mlist[i]] for i in range(len(mlist))]
 
@@ -84,13 +84,6 @@ def get_clustering(fname, type):
 #hopefully print results, modularity only works for wikiG (so setting it to zero)
 def print_results(G, name, type):
 
-	files = {"wiki": ["wiki_community.txt", "wiki-Vote.metis.c1000.i2.0.b0.5", "wiki-Vote.metis.part.100"],\
-		"p2p": ["p2p_community.txt", "p2p-Gnutella08.metis.c1000.i2.0.b0.5", "p2p-Gnutella08.metis.part.100"],\
-			"facebook": ["facebook_community.txt", "facebook_combined.metis.c1000.i2.0.b0.5", "facebook_combined.metis.part.100"],\
-				"collab": ["ca-GrQc_community.txt", "ca-GrQc_community.txt", "ca-GrQc.metis.part.100"],\
-					"youtube": ["com-youtube.ungraph.metis.c1000.i2.0.b0.5", "com-youtube.ungraph.metis.part.100"]}
-
-	fname = "output/" + files[name][type]
 	clusters = get_clustering(name, type)
 	results = []
 	V = set(G.nodes) #does not change
