@@ -72,9 +72,16 @@ def get_clustering(name, type):
 	elif type == "metis":
 		clustering = np.loadtxt('output/' + name + '.metis.part.100', dtype = int)
 	elif type == "community":
-		cluster_data = np.loadtxt('output/' + name + '_community.txt', dtype = int)
-		cluster_map = {i[0]: i[1] for i in cluster_data}
-		clustering = [cluster_map[mlist[i]] for i in range(len(mlist))]
+		clustering = np.loadtxt('output/' + name + '_community.txt', dtype = int)
+
+		clusters = [[] for i in range(len(np.unique(clustering[:,1])))]
+    	# Iterates through file output and puts them in clusters
+		for node in clustering:
+			clusterID = node[1]
+			nodeID= node[0]
+			clusters[clusterID].append(nodeID)
+		
+		return clusters
 
 	clusters = [[] for i in range(len(np.unique(clustering)))] #group by cluster
 	for i in range(len(clustering)):
